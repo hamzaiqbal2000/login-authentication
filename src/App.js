@@ -1,24 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Container } from "react-bootstrap";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import DisplayCalls from "./components/DisplayCalls/DisplayCalls";
+import Login from "./components/Login/Login";
+import Logout from "./components/Logout/Logout";
+import CallDetails from "./components/CallDetails/CallDetails";
+import { useAuth } from "./context/AuthContext";
+import { CallProvider } from "./context/CallContext";
 
 function App() {
+  const { token } = useAuth();
+  if (!token) {
+    return <Login />;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <CallProvider>
+      <Container>
+        <div
+          className="d-flex align-items-center justify-content-center"
+          style={{ marginTop: "1.5rem" }}
         >
-          Learn React
-        </a>
-      </header>
-    </div>
+          <h1>Calls</h1>
+          <Logout />
+        </div>
+        <Router>
+          <Switch>
+            <Route>
+              <DisplayCalls path="/display" />
+            </Route>
+            <Route>
+              <CallDetails path="/details" />
+            </Route>
+            {/* <Route path="/displaycalls"></Route> */}
+          </Switch>
+        </Router>
+      </Container>
+    </CallProvider>
   );
 }
 
